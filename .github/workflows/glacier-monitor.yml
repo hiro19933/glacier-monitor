@@ -3,8 +3,7 @@ name: Glacier monitor
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/5 * * * *"
-
+    - cron: "*/5 * * * *" # every 5 minutes
 permissions:
   contents: write
 
