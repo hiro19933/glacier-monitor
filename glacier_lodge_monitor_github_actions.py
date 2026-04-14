@@ -36,6 +36,7 @@ DEFAULT_TARGET_DATES = [
     "08-10-2026",
     "08-11-2026",
     "08-12-2026",
+    "08-18-2026",
 ]
 DEFAULT_TARGET_HOTELS = [
     "Many Glacier Hotel",
