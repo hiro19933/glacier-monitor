@@ -201,15 +201,15 @@ def fetch_page_text(url: str, screenshot_file: Path | None) -> tuple[str, str]:
         browser = p.chromium.launch(headless=HEADLESS)
         page = browser.new_page()
         try:
-            page.goto(url, wait_until="domcontentloaded", timeout=120_000)
-            page.wait_for_timeout(8000)
+            page.goto(url, wait_until="domcontentloaded", timeout=180_000)
+            page.wait_for_timeout(60000)
 
             if screenshot_file is not None:
                 ensure_parent_dir(screenshot_file)
                 page.screenshot(path=str(screenshot_file), full_page=True)
 
             title = page.title()
-            body_text = page.locator("body").inner_text(timeout=30_000)
+            body_text = page.locator("body").inner_text(timeout=60000)
             return title, body_text
         finally:
             browser.close()
