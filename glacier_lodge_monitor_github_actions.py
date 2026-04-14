@@ -312,8 +312,31 @@ def validate_config() -> list[str]:
 
 
 def main() -> int:
-    send_line_message("【テスト通知】GitHub Actions からのLINE通知は正常です。")
-    return 0
+    problems = validate_config()
+    if problems:
+        print("Missing config:", ", ".join(problems), file=sys.stderr)
+        return 1
+
+    print("Starting single GitHub Actions check...")
+    print(f"Dates: {', '.join(TARGET_DATES)}")
+    print(f"Hotels: {', '.join(canonical_hotel_name(h) for h in TARGET_HOTELS)}")
+    print(f"State file: {STATE_FILE}")
+
+    try:
+        state = load_state()
+        state, _ = monitor_once(state)
+        save_state(state)
+        return 0
+    except PlaywrightTimeoutError as e:
+        print(f"Page timeout: {e}", file=sys.stderr)
+        return 2
+    except requests.HTTPError as e:
+        detail = e.response.text if e.response is not None else str(e)
+        print(f"LINE API error: {detail}", file=sys.stderr)
+        return 3
+    except Exception as e:
+        print(f"Unexpected error: {e}", file=sys.stderr)
+        return 4
 
 if __name__ == "__main__":
     raise SystemExit(main())
